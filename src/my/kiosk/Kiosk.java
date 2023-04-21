@@ -16,11 +16,10 @@ import my.kiosk.fonts.Fonts;
  * @author User
  */
 public class Kiosk extends javax.swing.JFrame {
-
     ComboMeals[][] meals = new ComboMeals[3][3];
     double total, price;
-    String meal; 
-   
+    String location;
+    
     public void initMeals(){
         meals[0][0] = new ComboMeals("TCHBURGER", 200.00);  
         meals[0][1] = new ComboMeals("SNTBURGER",190.00);
@@ -28,25 +27,28 @@ public class Kiosk extends javax.swing.JFrame {
         meals[1][1] = new ComboMeals("DMCBURGER",170.00);
         meals[2][0] = new ComboMeals("MONBURGER",205.00);
         meals[2][1] = new ComboMeals("SMCBURGER",150.00);
+        
     }
     /**
      * Creates new form Kiosk
      */
-    public Kiosk() {
+    public Kiosk(String location) {
+        this.location = location;
+        
         initComponents();
+        System.out.println("asd");
         initMeals();
         setLocationRelativeTo(null);
-        headerPrint();
+        headerPrint(); 
     }
     
-    void clicked(int x, int y, JButton button){
-        
+    void clicked(int x, int y, JButton button, String name){
+        System.out.println("asdzz");
         SpinnerNumberModel sModel = new SpinnerNumberModel(1, 1, 30, 1);
         JSpinner spinner = new JSpinner(sModel);
         int qty = 0; 
         
-        var ans = JOptionPane.showConfirmDialog(null, spinner, "Add " +
-                meals[x][y].getName() +", ₱" + meals[x][y].getPrice() +" at your order?", 
+        var ans = JOptionPane.showConfirmDialog(null, spinner, "Add " + name +", ₱" + meals[x][y].getPrice() +" at your order?", 
                 JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,button.getIcon());
        
         if (ans == JOptionPane.YES_OPTION){
@@ -69,6 +71,7 @@ public class Kiosk extends javax.swing.JFrame {
         txtReceipt.append("\n         for online delivery,");
         txtReceipt.append("\n        visit mcolibee.com.ph");
         txtReceipt.append("\n\n Official Receipt #: " + receipt_num);
+        txtReceipt.append("\n Dining Location: " + location);
         txtReceipt.append("\nQTY    ITEM        PRICE      TOTAL");
     }
 
@@ -85,12 +88,12 @@ public class Kiosk extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        btnBurger = new javax.swing.JButton();
-        btnFries = new javax.swing.JButton();
-        btnNuggets = new javax.swing.JButton();
-        btnChicken = new javax.swing.JButton();
-        btnSundae = new javax.swing.JButton();
-        btnCoffee = new javax.swing.JButton();
+        btnTCHBURGER = new javax.swing.JButton();
+        btnSNTBURGER = new javax.swing.JButton();
+        btnDQPBURGER = new javax.swing.JButton();
+        btnDMCBURGER = new javax.swing.JButton();
+        btnMONBURGER = new javax.swing.JButton();
+        btnSMCBURGER = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtReceipt = new javax.swing.JTextArea();
         btnDone = new javax.swing.JButton();
@@ -108,102 +111,114 @@ public class Kiosk extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new java.awt.GridLayout(3, 2, 10, 10));
 
-        btnBurger.setBackground(new java.awt.Color(255, 102, 102));
-        btnBurger.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnBurger.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/1.png"))); // NOI18N
-        btnBurger.setText("Triple Cheeseburger");
-        btnBurger.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnBurger.setContentAreaFilled(false);
-        btnBurger.setDefaultCapable(false);
-        btnBurger.setFocusPainted(false);
-        btnBurger.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBurger.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnBurger.addActionListener(new java.awt.event.ActionListener() {
+        btnTCHBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnTCHBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnTCHBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/1.png"))); // NOI18N
+        btnTCHBURGER.setText("Triple Cheeseburger");
+        btnTCHBURGER.setToolTipText("200");
+        btnTCHBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnTCHBURGER.setContentAreaFilled(false);
+        btnTCHBURGER.setDefaultCapable(false);
+        btnTCHBURGER.setFocusPainted(false);
+        btnTCHBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTCHBURGER.setName("TCHBURGER"); // NOI18N
+        btnTCHBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnTCHBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBurgerActionPerformed(evt);
+                btnTCHBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBurger);
+        jPanel1.add(btnTCHBURGER);
 
-        btnFries.setBackground(new java.awt.Color(255, 102, 102));
-        btnFries.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnFries.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/2.png"))); // NOI18N
-        btnFries.setText("Surf n Turf");
-        btnFries.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnFries.setContentAreaFilled(false);
-        btnFries.setFocusPainted(false);
-        btnFries.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnFries.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnFries.addActionListener(new java.awt.event.ActionListener() {
+        btnSNTBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnSNTBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnSNTBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/2.png"))); // NOI18N
+        btnSNTBURGER.setText("Surf n Turf");
+        btnSNTBURGER.setToolTipText("190");
+        btnSNTBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnSNTBURGER.setContentAreaFilled(false);
+        btnSNTBURGER.setFocusPainted(false);
+        btnSNTBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSNTBURGER.setName("SNTBURGER"); // NOI18N
+        btnSNTBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSNTBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFriesActionPerformed(evt);
+                btnSNTBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnFries);
+        jPanel1.add(btnSNTBURGER);
 
-        btnNuggets.setBackground(new java.awt.Color(255, 102, 102));
-        btnNuggets.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnNuggets.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/3.png"))); // NOI18N
-        btnNuggets.setText("Double Quarter Pounder");
-        btnNuggets.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnNuggets.setContentAreaFilled(false);
-        btnNuggets.setFocusPainted(false);
-        btnNuggets.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnNuggets.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnNuggets.addActionListener(new java.awt.event.ActionListener() {
+        btnDQPBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnDQPBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnDQPBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/3.png"))); // NOI18N
+        btnDQPBURGER.setText("Double Quarter Pounder");
+        btnDQPBURGER.setToolTipText("195");
+        btnDQPBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnDQPBURGER.setContentAreaFilled(false);
+        btnDQPBURGER.setFocusPainted(false);
+        btnDQPBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDQPBURGER.setName("DPQBURGER"); // NOI18N
+        btnDQPBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDQPBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuggetsActionPerformed(evt);
+                btnDQPBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnNuggets);
+        jPanel1.add(btnDQPBURGER);
 
-        btnChicken.setBackground(new java.awt.Color(255, 102, 102));
-        btnChicken.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnChicken.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/4.png"))); // NOI18N
-        btnChicken.setText("Double McChicken");
-        btnChicken.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnChicken.setContentAreaFilled(false);
-        btnChicken.setFocusPainted(false);
-        btnChicken.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnChicken.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnChicken.addActionListener(new java.awt.event.ActionListener() {
+        btnDMCBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnDMCBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnDMCBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/4.png"))); // NOI18N
+        btnDMCBURGER.setText("Double McChicken");
+        btnDMCBURGER.setToolTipText("170");
+        btnDMCBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnDMCBURGER.setContentAreaFilled(false);
+        btnDMCBURGER.setFocusPainted(false);
+        btnDMCBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDMCBURGER.setName("DMCBURGER"); // NOI18N
+        btnDMCBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDMCBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChickenActionPerformed(evt);
+                btnDMCBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnChicken);
+        jPanel1.add(btnDMCBURGER);
 
-        btnSundae.setBackground(new java.awt.Color(255, 102, 102));
-        btnSundae.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnSundae.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/5.png"))); // NOI18N
-        btnSundae.setText("Monster Mac");
-        btnSundae.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnSundae.setContentAreaFilled(false);
-        btnSundae.setFocusPainted(false);
-        btnSundae.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSundae.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSundae.addActionListener(new java.awt.event.ActionListener() {
+        btnMONBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnMONBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnMONBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/5.png"))); // NOI18N
+        btnMONBURGER.setText("Monster Mac");
+        btnMONBURGER.setToolTipText("205");
+        btnMONBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnMONBURGER.setContentAreaFilled(false);
+        btnMONBURGER.setFocusPainted(false);
+        btnMONBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnMONBURGER.setName("MONBURGER"); // NOI18N
+        btnMONBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnMONBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSundaeActionPerformed(evt);
+                btnMONBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSundae);
+        jPanel1.add(btnMONBURGER);
 
-        btnCoffee.setBackground(new java.awt.Color(255, 102, 102));
-        btnCoffee.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        btnCoffee.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/6.png"))); // NOI18N
-        btnCoffee.setText("Spicy McChicken");
-        btnCoffee.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        btnCoffee.setContentAreaFilled(false);
-        btnCoffee.setFocusPainted(false);
-        btnCoffee.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCoffee.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnCoffee.addActionListener(new java.awt.event.ActionListener() {
+        btnSMCBURGER.setBackground(new java.awt.Color(255, 102, 102));
+        btnSMCBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnSMCBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/6.png"))); // NOI18N
+        btnSMCBURGER.setText("Spicy McChicken");
+        btnSMCBURGER.setToolTipText("150");
+        btnSMCBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnSMCBURGER.setContentAreaFilled(false);
+        btnSMCBURGER.setFocusPainted(false);
+        btnSMCBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSMCBURGER.setName("SMCBURGER"); // NOI18N
+        btnSMCBURGER.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSMCBURGER.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCoffeeActionPerformed(evt);
+                btnSMCBURGERActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCoffee);
+        jPanel1.add(btnSMCBURGER);
 
         txtReceipt.setEditable(false);
         txtReceipt.setColumns(10);
@@ -225,7 +240,7 @@ public class Kiosk extends javax.swing.JFrame {
 
         jLabel3.setFont(Fonts.getFont(16));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("HACK THE MENU");
+        jLabel3.setText("THE HACKED MENU");
 
         btnCancel.setBackground(new java.awt.Color(255, 51, 0));
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
@@ -287,7 +302,7 @@ public class Kiosk extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/imageedit_6_5326083427.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/s-logo.png"))); // NOI18N
         jLabel1.setText("#SECRETMENU");
         jLabel1.setOpaque(true);
 
@@ -351,39 +366,39 @@ public class Kiosk extends javax.swing.JFrame {
         total = 0;
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnCoffeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCoffeeActionPerformed
-        clicked(2,1, btnCoffee);
-    }//GEN-LAST:event_btnCoffeeActionPerformed
+    private void btnSMCBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSMCBURGERActionPerformed
+        clicked(2,1, btnSMCBURGER, "Spicy McChicken");
+    }//GEN-LAST:event_btnSMCBURGERActionPerformed
 
-    private void btnSundaeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSundaeActionPerformed
-        clicked(2,0, btnSundae);
-    }//GEN-LAST:event_btnSundaeActionPerformed
+    private void btnMONBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMONBURGERActionPerformed
+        clicked(2,0, btnMONBURGER, "Monster Mac");
+    }//GEN-LAST:event_btnMONBURGERActionPerformed
 
-    private void btnChickenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChickenActionPerformed
-        clicked(1,1, btnChicken);
-    }//GEN-LAST:event_btnChickenActionPerformed
+    private void btnDMCBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDMCBURGERActionPerformed
+        clicked(1,1, btnDMCBURGER, "Double McChicken");
+    }//GEN-LAST:event_btnDMCBURGERActionPerformed
 
-    private void btnNuggetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuggetsActionPerformed
-        clicked(1,0, btnNuggets);
-    }//GEN-LAST:event_btnNuggetsActionPerformed
+    private void btnDQPBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDQPBURGERActionPerformed
+       clicked(1,0, btnDQPBURGER, "Double Quarter Pounder");
+    }//GEN-LAST:event_btnDQPBURGERActionPerformed
 
-    private void btnFriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriesActionPerformed
-        clicked(0,1, btnFries);
-    }//GEN-LAST:event_btnFriesActionPerformed
+    private void btnSNTBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSNTBURGERActionPerformed
+       clicked(0,1, btnSNTBURGER, "Surf 'N Turf");
+    }//GEN-LAST:event_btnSNTBURGERActionPerformed
 
-    private void btnBurgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBurgerActionPerformed
-        clicked(0,0, btnBurger);
-    }//GEN-LAST:event_btnBurgerActionPerformed
+    private void btnTCHBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTCHBURGERActionPerformed
+       clicked(0,0, btnTCHBURGER, "Triple Cheese");
+    }//GEN-LAST:event_btnTCHBURGERActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBurger;
     private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnChicken;
-    private javax.swing.JButton btnCoffee;
+    private javax.swing.JButton btnDMCBURGER;
+    private javax.swing.JButton btnDQPBURGER;
     private javax.swing.JButton btnDone;
-    private javax.swing.JButton btnFries;
-    private javax.swing.JButton btnNuggets;
-    private javax.swing.JButton btnSundae;
+    private javax.swing.JButton btnMONBURGER;
+    private javax.swing.JButton btnSMCBURGER;
+    private javax.swing.JButton btnSNTBURGER;
+    private javax.swing.JButton btnTCHBURGER;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
