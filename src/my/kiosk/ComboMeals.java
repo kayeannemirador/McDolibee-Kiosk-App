@@ -22,8 +22,6 @@ public class ComboMeals {
         this.comboprice = price;
     }
     
-    
-
     public String getName() {
         return comboname;
     }
@@ -31,8 +29,5 @@ public class ComboMeals {
     public double getPrice() {
         return comboprice;
     }
-    
-    
-    
     
 }

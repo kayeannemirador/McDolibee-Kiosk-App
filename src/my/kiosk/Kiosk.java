@@ -11,14 +11,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import my.kiosk.fonts.Fonts;
+import java.util.ArrayList;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 /**
  *
  * @author User
  */
 public class Kiosk extends javax.swing.JFrame {
     ComboMeals[][] meals = new ComboMeals[3][3];
-    double total, price;
+    double total = 0, price;
     String location;
+    String printname, printprice;
+    Icon printicon;
+    Upgrade upgrade;
+
+    
+    ArrayList<MealsCombo> combomeals = new ArrayList<>();
     
     public void initMeals(){
         meals[0][0] = new ComboMeals("TCHBURGER", 200.00);  
@@ -26,42 +35,30 @@ public class Kiosk extends javax.swing.JFrame {
         meals[1][0] = new ComboMeals("DQPBURGER",195.00);
         meals[1][1] = new ComboMeals("DMCBURGER",170.00);
         meals[2][0] = new ComboMeals("MONBURGER",205.00);
-        meals[2][1] = new ComboMeals("SMCBURGER",150.00);
-        
+        meals[2][1] = new ComboMeals("SMCBURGER",150.00);   
     }
     /**
      * Creates new form Kiosk
      */
     public Kiosk(String location) {
         this.location = location;
-        
         initComponents();
-        System.out.println("asd");
         initMeals();
         setLocationRelativeTo(null);
         headerPrint(); 
     }
     
-    void clicked(int x, int y, JButton button, String name){
-        System.out.println("asdzz");
-        SpinnerNumberModel sModel = new SpinnerNumberModel(1, 1, 30, 1);
-        JSpinner spinner = new JSpinner(sModel);
-        int qty = 0; 
-        
-        var ans = JOptionPane.showConfirmDialog(null, spinner, "Add " + name +", ₱" + meals[x][y].getPrice() +" at your order?", 
-                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,button.getIcon());
-       
-        if (ans == JOptionPane.YES_OPTION){
-             qty = (Integer)spinner.getValue();
-            txtReceipt.append("\n" +qty+ "    " + meals[x][y].getName()+ "      " + String.valueOf(meals[x][y].getPrice()) + "     "
-            +meals[x][y].getPrice()*qty);
-            price = meals[x][y].getPrice()*qty;
-            total += price; 
-            
-        }
+    
+    public Kiosk(String getname, String getprice, Icon geticon){
+        this.printname = getname;
+        this.printprice = getprice;
+        this.printicon = geticon;   
+    }  
+   
+    void addTotal(double total){
+       this.total += total;
     }
     
-   
     void headerPrint(){
         Random randomNum = new Random();
         int receipt_num = randomNum.nextInt(100000);
@@ -74,6 +71,17 @@ public class Kiosk extends javax.swing.JFrame {
         txtReceipt.append("\n Dining Location: " + location);
         txtReceipt.append("\nQTY    ITEM        PRICE      TOTAL");
     }
+    
+    void setComboMeal(String path, String label, String name, double price){
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        combomeals.add(new MealsCombo(name,label, price, icon));
+        
+    }
+    
+    void display(){
+        upgrade = new Upgrade(combomeals, txtReceipt,this);
+        upgrade.setVisible(true);
+    }
 
   
     /**
@@ -85,7 +93,7 @@ public class Kiosk extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         btnTCHBURGER = new javax.swing.JButton();
@@ -99,24 +107,29 @@ public class Kiosk extends javax.swing.JFrame {
         btnDone = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         btnCancel = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mcdonald's Kiosk");
 
-        jPanel2.setBackground(new java.awt.Color(255, 102, 102));
+        jLabel1.setBackground(new java.awt.Color(51, 51, 51));
+        jLabel1.setFont(Fonts.getMcdoFont(30));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/s-logo.png"))); // NOI18N
+        jLabel1.setText("#SecretMenu");
+        jLabel1.setOpaque(true);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.setLayout(new java.awt.GridLayout(3, 2, 10, 10));
 
-        btnTCHBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnTCHBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnTCHBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnTCHBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/1.png"))); // NOI18N
         btnTCHBURGER.setText("Triple Cheeseburger");
         btnTCHBURGER.setToolTipText("200");
-        btnTCHBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnTCHBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnTCHBURGER.setContentAreaFilled(false);
         btnTCHBURGER.setDefaultCapable(false);
         btnTCHBURGER.setFocusPainted(false);
@@ -130,12 +143,11 @@ public class Kiosk extends javax.swing.JFrame {
         });
         jPanel1.add(btnTCHBURGER);
 
-        btnSNTBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnSNTBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnSNTBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnSNTBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/2.png"))); // NOI18N
         btnSNTBURGER.setText("Surf n Turf");
         btnSNTBURGER.setToolTipText("190");
-        btnSNTBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnSNTBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnSNTBURGER.setContentAreaFilled(false);
         btnSNTBURGER.setFocusPainted(false);
         btnSNTBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -148,12 +160,11 @@ public class Kiosk extends javax.swing.JFrame {
         });
         jPanel1.add(btnSNTBURGER);
 
-        btnDQPBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnDQPBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnDQPBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnDQPBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/3.png"))); // NOI18N
         btnDQPBURGER.setText("Double Quarter Pounder");
         btnDQPBURGER.setToolTipText("195");
-        btnDQPBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnDQPBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.darkGray, java.awt.Color.lightGray, java.awt.Color.gray, java.awt.Color.black));
         btnDQPBURGER.setContentAreaFilled(false);
         btnDQPBURGER.setFocusPainted(false);
         btnDQPBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -166,12 +177,11 @@ public class Kiosk extends javax.swing.JFrame {
         });
         jPanel1.add(btnDQPBURGER);
 
-        btnDMCBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnDMCBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnDMCBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnDMCBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/4.png"))); // NOI18N
         btnDMCBURGER.setText("Double McChicken");
         btnDMCBURGER.setToolTipText("170");
-        btnDMCBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnDMCBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnDMCBURGER.setContentAreaFilled(false);
         btnDMCBURGER.setFocusPainted(false);
         btnDMCBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -184,12 +194,11 @@ public class Kiosk extends javax.swing.JFrame {
         });
         jPanel1.add(btnDMCBURGER);
 
-        btnMONBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnMONBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnMONBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnMONBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/5.png"))); // NOI18N
         btnMONBURGER.setText("Monster Mac");
         btnMONBURGER.setToolTipText("205");
-        btnMONBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnMONBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnMONBURGER.setContentAreaFilled(false);
         btnMONBURGER.setFocusPainted(false);
         btnMONBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -202,12 +211,11 @@ public class Kiosk extends javax.swing.JFrame {
         });
         jPanel1.add(btnMONBURGER);
 
-        btnSMCBURGER.setBackground(new java.awt.Color(255, 102, 102));
-        btnSMCBURGER.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnSMCBURGER.setBackground(new java.awt.Color(102, 102, 102));
         btnSMCBURGER.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/6.png"))); // NOI18N
-        btnSMCBURGER.setText("Spicy McChicken");
+        btnSMCBURGER.setText("Spicy McCrispy");
         btnSMCBURGER.setToolTipText("150");
-        btnSMCBURGER.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnSMCBURGER.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.gray, java.awt.Color.lightGray, java.awt.Color.darkGray, java.awt.Color.black));
         btnSMCBURGER.setContentAreaFilled(false);
         btnSMCBURGER.setFocusPainted(false);
         btnSMCBURGER.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -228,9 +236,11 @@ public class Kiosk extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtReceipt);
 
         btnDone.setBackground(new java.awt.Color(0, 204, 0));
+        btnDone.setFont(Fonts.getMcdoFont(12));
         btnDone.setForeground(new java.awt.Color(255, 255, 255));
         btnDone.setText("Done");
         btnDone.setBorderPainted(false);
+        btnDone.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDone.setFocusPainted(false);
         btnDone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,14 +248,16 @@ public class Kiosk extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(Fonts.getFont(16));
+        jLabel3.setFont(Fonts.getMcdoFont(40));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("THE HACKED MENU");
 
         btnCancel.setBackground(new java.awt.Color(255, 51, 0));
+        btnCancel.setFont(Fonts.getMcdoFont(12));
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
         btnCancel.setText("Cancel");
         btnCancel.setBorderPainted(false);
+        btnCancel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancel.setFocusPainted(false);
         btnCancel.setFocusable(false);
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -259,86 +271,63 @@ public class Kiosk extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGap(47, 47, 47)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnDone, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43))
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(44, 44, 44)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(364, Short.MAX_VALUE)))
+                    .addContainerGap(424, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 31, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDone, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(35, 35, 35))))
+                        .addGap(37, 37, 37)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDone, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(55, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(77, 77, 77)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(32, Short.MAX_VALUE)))
-        );
-
-        jLabel1.setBackground(new java.awt.Color(51, 51, 51));
-        jLabel1.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/my/kiosk/src/s-logo.png"))); // NOI18N
-        jLabel1.setText("#SECRETMENU");
-        jLabel1.setOpaque(true);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63))
+                    .addGap(63, 63, 63)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(60, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
-
         txtReceipt.append("\nTotal Bill:                  " + total);
         txtReceipt.append("\n\n   Thank you, Please come again.");
         txtReceipt.append("\n     Please pay at the counter.");
@@ -367,27 +356,46 @@ public class Kiosk extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSMCBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSMCBURGERActionPerformed
-        clicked(2,1, btnSMCBURGER, "Spicy McChicken");
+       setComboMeal("/my/kiosk/src/6.png", "SMCBURGER ", "Spicy McCrispy", 150);
+       setComboMeal("/my/kiosk/src/combomeals/spiM.png", "SMCMEAL(M)", "Upsize Fries and Cola (M", 180);
+       setComboMeal("/my/kiosk/src/combomeals/spiL.png", "SMCMEAL(L)","Upsize Fries and Cola (L)", 195);
+       display();
     }//GEN-LAST:event_btnSMCBURGERActionPerformed
 
     private void btnMONBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMONBURGERActionPerformed
-        clicked(2,0, btnMONBURGER, "Monster Mac");
+       setComboMeal("/my/kiosk/src/5.png", "MONBURGER ", "Monster Mac", 205);
+       setComboMeal("/my/kiosk/src/combomeals/monM.png","MONMEAL(M)", "Upsize Fries and Cola (M)", 235);
+       setComboMeal("/my/kiosk/src/combomeals/monL.png","MONMEAL(L)", "Upsize Fries and Cola (L)", 250);
+       display();
+    
     }//GEN-LAST:event_btnMONBURGERActionPerformed
 
     private void btnDMCBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDMCBURGERActionPerformed
-        clicked(1,1, btnDMCBURGER, "Double McChicken");
+       setComboMeal("/my/kiosk/src/4.png", "DMCBURGER ", "Double McChicken", 170);
+       setComboMeal("/my/kiosk/src/combomeals/dmcM.png","DMCMEAL(M)", "Upsize Fries and Cola (M)", 200);
+       setComboMeal("/my/kiosk/src/combomeals/dmcL.png", "DMCMEAL(L)","Upsize Fries and Cola (L)", 215);
+       display();
     }//GEN-LAST:event_btnDMCBURGERActionPerformed
 
     private void btnDQPBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDQPBURGERActionPerformed
-       clicked(1,0, btnDQPBURGER, "Double Quarter Pounder");
+       setComboMeal("/my/kiosk/src/3.png","DQPBURGER ", "Double Quarter Pounder", 195);
+       setComboMeal("/my/kiosk/src/combomeals/dqpM.png", "DQPMEAL(M)","Upsize Fries and Cola (M)", 225);
+       setComboMeal("/my/kiosk/src/combomeals/dqpL.png","DQPMEAL(L)", "Upsize Fries and Cola (L)", 240);
+       display();
     }//GEN-LAST:event_btnDQPBURGERActionPerformed
 
     private void btnSNTBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSNTBURGERActionPerformed
-       clicked(0,1, btnSNTBURGER, "Surf 'N Turf");
+       setComboMeal("/my/kiosk/src/2.png", "SNTBURGER ", "Surf N Turf", 190);
+       setComboMeal("/my/kiosk/src/combomeals/sntM.png","SNTMEAL(M)","Upsize Fries and Cola (M)", 220);
+       setComboMeal("/my/kiosk/src/combomeals/sntL.png","SNTMEAL(L)", "Upsize Fries and Cola (L)", 235);
+       display();
     }//GEN-LAST:event_btnSNTBURGERActionPerformed
 
     private void btnTCHBURGERActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTCHBURGERActionPerformed
-       clicked(0,0, btnTCHBURGER, "Triple Cheese");
+       setComboMeal("/my/kiosk/src/1.png", "TCHBURGER ", "Triple Cheeseburger", 200);
+       setComboMeal("/my/kiosk/src/combomeals/trpM.png","TCHMEAL(M)" ,"Upsize Fries and Cola (M)", 230);
+       setComboMeal("/my/kiosk/src/combomeals/trpL.png", "TCHMEAL(L)","Upsize Fries and Cola (L)", 245);
+       display();
     }//GEN-LAST:event_btnTCHBURGERActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -402,7 +410,6 @@ public class Kiosk extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txtReceipt;
