@@ -109,7 +109,7 @@ public class Kiosk extends javax.swing.JFrame {
         btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Mcdonald's Kiosk");
+        setTitle("McOlibee Secret Menu");
 
         jLabel1.setBackground(new java.awt.Color(51, 51, 51));
         jLabel1.setFont(Fonts.getMcdoFont(30));
@@ -346,6 +346,10 @@ public class Kiosk extends javax.swing.JFrame {
         } catch (PrinterException e){
             JOptionPane.showMessageDialog(null, e);
         }
+        
+        this.setVisible(false);
+        this.dispose();
+        new OrderHere().setVisible(true);
 
     }//GEN-LAST:event_btnDoneActionPerformed
 
